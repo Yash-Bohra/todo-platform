@@ -1,0 +1,14 @@
+CREATE TABLE users(
+ id SERIAL PRIMARY KEY,
+ email TEXT UNIQUE,
+ password_hash TEXT,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE todos(
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    title TEXT NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
