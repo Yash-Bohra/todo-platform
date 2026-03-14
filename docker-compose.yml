@@ -15,6 +15,22 @@ services:
     volumes:
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
+  auth-service:
+    build: ./services/auth-service
+
+    ports:
+      - "8081:8081"
+
+    depends_on:
+      - postgres
+
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+
   todo-service:
     build: ./services/todo-service
 
@@ -31,18 +47,12 @@ services:
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
 
-  auth-service:
-    build: ./services/auth-service
+  gateway:
+    build: ./gateway
 
     ports:
-      - "8081:8081"
+      - "8080:8080"
 
     depends_on:
-      - postgres
-
-    environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: postgres
-      DB_PORT: ${DB_PORT}
-      DB_NAME: ${DB_NAME}
+      - auth-service
+      - todo-service
